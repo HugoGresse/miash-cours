@@ -16,6 +16,7 @@ export const searchMoviesFromTheMovieDB = async (searchTerms = undefined) => {
 
   const response = await fetch(url, options);
   if (!response.ok) {
+    console.error(response)
     throw new Error('Failed to fetch movies from TMDB');
   }
   const data = await response.json();

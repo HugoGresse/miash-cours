@@ -1,36 +1,22 @@
-import http from 'node:http';
+import Fastify from 'fastify';
 import app from './app.js';
-import 'dotenv/config'
+import 'dotenv/config';
 
-const server = http.createServer(app);
+const server = Fastify({
+  logger: {
+    level: process.env.NODE_ENV === 'test' ? 'error' : 'info'
+  }
+});
+
+// Register the main app
+await server.register(app);
 
 const port = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 3000;
 
-server.listen(port);
-
-server.on('listening', () => {
-  const addr = server.address();
-  console.log(`Listening on port ${addr.port}`);
-});
-
-server.on('error', (error) => {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES': {
-      console.error(`Port ${port} requires elevated privileges`);
-      process.exit(1);
-      break;
-    }
-    case 'EADDRINUSE': {
-      console.error(`Port ${port} is already in use`);
-      process.exit(1);
-      break;
-    }
-    default:
-      throw error;
-  }
-});
+try {
+  await server.listen({ port });
+  console.log(`Server listening on ${server.server.address().port}`);
+} catch (err) {
+  server.log.error(err);
+  process.exit(1);
+}

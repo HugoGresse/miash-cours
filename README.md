@@ -1,7 +1,7 @@
 # Example API Server for MIASHS M1 Students
 
 ## Features
-- [x] Express server
+- [x] Fastify server
 - [x] REST API
 - [x] Search movies using the The Movie Database API
 - [x] Add movies to an account watchlist
